@@ -144,6 +144,18 @@ async function run() {
         })
 
 
+
+        //---------------------------------------------------------------------------
+        // Adding New JObs from client to DB
+        //---------------------------------------------------------------------------
+        app.post('/jobs',verifiedToken,verifyAdmin,async(req,res)=>{
+            const newJob = req.body;
+            const result = await jobCollection.insertOne(newJob);
+            res.send(result)
+        })
+
+
+
         //---------------------------------------------------------------------------
         //Getting all applied jobs and showing to client site
         //---------------------------------------------------------------------------
