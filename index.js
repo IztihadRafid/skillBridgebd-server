@@ -121,7 +121,7 @@ async function run() {
         //===========================================================================
         // MAKE ADMIN 
         //===========================================================================
-        app.patch('/users/admin/:id',verifiedToken,verifyAdmin, async (req, res) => {
+        app.patch('/users/admin/:id', verifiedToken, verifyAdmin, async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) };
             const updatedDoc = {
@@ -136,7 +136,7 @@ async function run() {
         //===========================================================================
         //delete user by admin
         //===========================================================================
-        app.delete('/users/:id',verifiedToken,verifyAdmin, async (req, res) => {
+        app.delete('/users/:id', verifiedToken, verifyAdmin, async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await userCollection.deleteOne(query);
@@ -148,11 +148,23 @@ async function run() {
         //---------------------------------------------------------------------------
         // Adding New JObs from client to DB
         //---------------------------------------------------------------------------
-        app.post('/jobs',verifiedToken,verifyAdmin,async(req,res)=>{
+        app.post('/jobs', verifiedToken, verifyAdmin, async (req, res) => {
             const newJob = req.body;
             const result = await jobCollection.insertOne(newJob);
             res.send(result)
         })
+
+        
+        //---------------------------------------------------------------------------
+        // DELETE JOB FROM CLIENT BY ADMIN
+        //---------------------------------------------------------------------------  
+        app.delete('/jobs/:id',verifiedToken,verifyAdmin,async(req,res)=>{
+            const id = req.params.id;
+            const query ={_id: new ObjectId(id)};
+            const result = await jobCollection.deleteOne(query);
+            res.send(result)
+        })
+
 
 
 
