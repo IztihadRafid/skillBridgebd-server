@@ -154,9 +154,37 @@ async function run() {
             res.send(result)
         })
 
-        
         //---------------------------------------------------------------------------
-        // DELETE JOB FROM CLIENT BY ADMIN
+        // UPDATE JOB FROM CLIENT SIDE BY ADMIN
+        //---------------------------------------------------------------------------  
+        app.get('/jobs/:id',async(req,res)=>{
+            const id = req.params.id;
+            const query = {_id: new ObjectId(id)}
+            const result = await jobCollection.findOne(query);
+            res.send(result)
+
+        })
+        app.patch('/jobs/:id',async(req,res)=>{
+            const job = req.body;
+            const id = req.params.id;
+            const filter = {_id: new ObjectId(id)}
+            const updatedDoc = {
+                $set: {
+                    title: job.title,
+                    description: job.description,
+                    sector: job.sector,
+                    salary:job.salary,
+                    open_position:job.open_position,
+                    jobtype: job.jobtype
+                }
+            }
+            const result = await jobCollection.updateOne(filter,updatedDoc);
+            res.send(result)
+        })
+
+
+        //---------------------------------------------------------------------------
+        // DELETE JOB FROM CLIENT SIDE BY ADMIN
         //---------------------------------------------------------------------------  
         app.delete('/jobs/:id',verifiedToken,verifyAdmin,async(req,res)=>{
             const id = req.params.id;
