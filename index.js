@@ -32,7 +32,9 @@ async function run() {
         // DATABASE COLLECTION
         const userCollection = client.db("skillBridge-DB").collection("users")
         const jobCollection = client.db("skillBridge-DB").collection("jobs")
-        const jobCartCollection = client.db("skillBridge-DB").collection("jobCarts")
+        const jobCartCollection = client.db("skillBridge-DB").collection("jobCarts");
+        const cvCollection = client.db("skillBridge-DB").collection('allCv');
+        const messageCollection= client.db("skillBridge-DB").collection('messages')
 
         //===========================================================================
         // JWT REALTED API
@@ -95,7 +97,7 @@ async function run() {
             const result = await userCollection.find().toArray()
             res.send(result);
         })
-
+        
         app.get('/users/admin/:email', verifiedToken, async (req, res) => {
             const email = req.params.email;
             if (email !== req.decoded.email) {
@@ -222,6 +224,36 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await jobCartCollection.deleteOne(query);
+            res.send(result)
+        })
+
+
+        //---------------------------------------------------------------------------
+        // adding cv of job seekers
+        //---------------------------------------------------------------------------
+        app.post('/allCV',async(req,res)=>{
+            const allcv = req.body;
+            const result = await cvCollection.insertOne(allcv);
+            res.send(result)
+        })
+
+        
+
+
+        //============================================================================
+        // MESSAGE SEND BY ADMIN
+        //============================================================================
+        app.post('/allmessage',async(req,res)=>{
+            const message = req.body;
+            const result = await messageCollection.insertOne(message);
+            res.send(result)
+        })
+
+        //---------------------------------------------------------------------------
+        //Getting all messagees
+        //---------------------------------------------------------------------------
+        app.get('/allmessage', async (req, res) => {
+            const result = await messageCollection.find().toArray();
             res.send(result)
         })
 
