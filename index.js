@@ -243,7 +243,7 @@ async function run() {
         //============================================================================
         // MESSAGE SEND BY ADMIN
         //============================================================================
-        app.post('/allmessage',async(req,res)=>{
+        app.post('/allmessage',verifiedToken,verifyAdmin,async(req,res)=>{
             const message = req.body;
             const result = await messageCollection.insertOne(message);
             res.send(result)
@@ -254,6 +254,15 @@ async function run() {
         //---------------------------------------------------------------------------
         app.get('/allmessage', async (req, res) => {
             const result = await messageCollection.find().toArray();
+            res.send(result)
+        })
+        //---------------------------------------------------------------------------
+        //Deleting Message by Admin
+        //---------------------------------------------------------------------------
+        app.delete('/allmessage/:id',verifiedToken,verifyAdmin, async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await messageCollection.deleteOne(query);
             res.send(result)
         })
 
